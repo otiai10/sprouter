@@ -15,23 +15,29 @@ const __main__ = () => {
   ipcMain.on('file', async (ev, input) => {
     const destdir = input.dest;
     if (input.type === 'audio/mp3') {
-      console.log(1000);
-      return fs.copyFileSync(input.path, path.join(destdir, path.basename(input.path)));
+      try {
+        fs.copyFileSync(input.path, path.join(destdir, path.basename(input.path)));
+        return ev.sender.send('success', {message: `File copied`});
+      } catch (error) {
+        return ev.sender.send('error', {message: `Exit code ${error.status}:\n${error.message}`});
+      }
     }
     if (!fs.existsSync(input.path)) {
-      console.log(2000);
-      return ev.sender.send('failed');
+      return ev.sender.send('error', { message: `Input file not found: ${input.path}`});
     }
     const ffmpeg = await lookpath('ffmpeg');
     if (!ffmpeg) {
-      console.log(3000);
-      return ev.sender.send('failed');
+      return ev.sender.send('error', { message: `ffmpeg executable not found: ${ffmpeg}`});
     }
-    input.path = input.path.replace(/(\s+)/g, '\\$1');
+    input.path = input.path.replace(/(?=[() ])/g, '\\');
     const destpath = path.join(destdir, path.basename(input.path).replace(path.extname(input.path), '.mp3'));
-    console.log(input.path, destpath);
-    console.log(ffmpeg);
-    execSync(`${ffmpeg} -i ${input.path} ${destpath}`);
+    try {
+      const cmd = `${ffmpeg} -y -i ${input.path} ${destpath}`; // TODO: shell injection
+      execSync(cmd);
+      return ev.sender.send('success', {message: `Good:\n${cmd.split(' ').join('\n')}`});
+    } catch (error) {
+      return ev.sender.send('error', {message: `Exit code ${error.status}:\n${error.message}`});
+    }
   });
 };
 

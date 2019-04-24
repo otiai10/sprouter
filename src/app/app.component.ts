@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, NgZone } from '@angular/core';
 
 declare var window: {
   ipcRenderer: {
@@ -19,14 +19,13 @@ export class AppComponent implements OnInit {
   destdir = (() => process.env.HOME)();
   isDraggedOver = false;
   isProcessing = false;
+  result: {type?: string, message?: string} = null;
 
-  constructor(private ref: ElementRef) {}
+  constructor(private ref: ElementRef, private zone: NgZone) {}
 
   ngOnInit() {
-    window.ipcRenderer.on('success', (ev, args) => {
-      console.log('SUCCESS:', args);
-      this.isProcessing = false;
-    });
+    window.ipcRenderer.on('success', (ev, args) => this.onResult({...args, type: 'success'}));
+    window.ipcRenderer.on('error', (ev, args) => this.onResult({...args, type: 'error'}));
   }
 
   onDrop(ev: DragEvent) {
@@ -36,9 +35,11 @@ export class AppComponent implements OnInit {
     if (!file) {
       return;
     }
-    const { name, path, size, type } = file as any;
-    window.ipcRenderer.send('file', { name, path, size, type, dest: this.destdir });
-    this.isProcessing = true;
+    this.startProcessing();
+    setTimeout(() => {
+      const { name, path, size, type } = file as any;
+      window.ipcRenderer.send('file', { name, path, size, type, dest: this.destdir });
+    });
   }
 
   onDragOver(ev) {
@@ -60,5 +61,16 @@ export class AppComponent implements OnInit {
       return;
     }
     this.destdir = ev.target.files[0].path;
+  }
+
+  private startProcessing() {
+    this.result = null;
+    this.isProcessing = true;
+  }
+  private onResult(result) {
+    this.zone.run(() => {
+      this.isProcessing = false;
+      this.result = result;
+    });
   }
 }
