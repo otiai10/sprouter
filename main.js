@@ -6,19 +6,19 @@ const path = require('path');
 
 const __main__ = () => {
   const win = new BrowserWindow({
-    width: 600,
-    height: 480,
+    width: 780,  minWidth: 780,
+    height: 480, minHeight: 400,
     x: 40, y: 40,
   });
   win.loadURL(`file://${__dirname}/dist/index.html`)
 
-  ipcMain.on('file', async (ev, source) => {
-    const destdir = '/Users/otiai10/Desktop'; // FIXME
-    if (source.type === 'audio/mp3') {
+  ipcMain.on('file', async (ev, input) => {
+    const destdir = input.dest;
+    if (input.type === 'audio/mp3') {
       console.log(1000);
-      return fs.copyFileSync(source.path, path.join(destdir, path.basename(source.path)));
+      return fs.copyFileSync(input.path, path.join(destdir, path.basename(input.path)));
     }
-    if (!fs.existsSync(source.path)) {
+    if (!fs.existsSync(input.path)) {
       console.log(2000);
       return ev.sender.send('failed');
     }
@@ -27,11 +27,11 @@ const __main__ = () => {
       console.log(3000);
       return ev.sender.send('failed');
     }
-    source.path = source.path.replace(/(\s+)/g, '\\$1');
-    const destpath = path.join(destdir, path.basename(source.path).replace(path.extname(source.path), '.mp3'));
-    console.log(source.path, destpath);
+    input.path = input.path.replace(/(\s+)/g, '\\$1');
+    const destpath = path.join(destdir, path.basename(input.path).replace(path.extname(input.path), '.mp3'));
+    console.log(input.path, destpath);
     console.log(ffmpeg);
-    execSync(`${ffmpeg} -i ${source.path} ${destpath}`);
+    execSync(`${ffmpeg} -i ${input.path} ${destpath}`);
   });
 };
 

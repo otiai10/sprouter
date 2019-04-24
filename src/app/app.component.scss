@@ -1,7 +1,64 @@
 
-#drop-area {
-  border: dashed 8px gray;
+$gray-color: gray;
+$primary-color: tomato;
+
+.container {
   width: 80%;
-  height: 400px;
-  margin: 0 auto;
+  height: 100%;
+  margin:  0 auto;
+  padding: 12px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  &>* {
+    width: 100%;
+  }
+  #drop-area {
+    flex: 1;
+    border: dashed 8px $gray-color;
+    border-radius: 4px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      color: $gray-color;
+      font-size: 2em;
+      font-weight: bold;
+    }
+  }
+  #configuration {
+    &>div {
+      margin: 12px 0;
+    }
+    button {
+      width: 120px; // TODO: Use flex
+      border: none;
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      font-size: 1.2em;
+      background-color: $primary-color;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+    #config-directory {
+      input[type=file] {
+        display: none;
+      }
+      span {
+        padding: 12px;
+      }
+    }
+    #config-conversion {
+      input[type=text] {
+        padding: 2px 12px;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 1.2em;
+      }
+    }
+  }
 }

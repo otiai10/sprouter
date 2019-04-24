@@ -5,9 +5,17 @@
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
   >
-
+    <span>drop a file here</span>
   </div>
-  <div class="forms">
-
+  <div id="configuration">
+    <div id="config-conversion">
+      <button id="conversion">Convert</button>
+      <input type="text" value=".wav" readonly /> → <input type="text" value=".mp3" readonly />
+    </div>
+    <div id="config-directory">
+      <button id="directory-finder-btn" (click)="startDirectorySelect()" >Folder</button>
+      <input type="file" webkitdirectory (change)="onDirectoryChange($event)" />
+      <span>{{destdir}}</span>
+    </div>
   </div>
 </div>

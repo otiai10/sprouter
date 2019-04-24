@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 
 declare var window: {
   ipcRenderer: {
@@ -7,6 +7,8 @@ declare var window: {
   }
 };
 
+declare var process: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,8 +16,11 @@ declare var window: {
 })
 export class AppComponent implements OnInit {
 
+  destdir = (() => process.env.HOME)();
   isDraggedOver = false;
   isProcessing = false;
+
+  constructor(private ref: ElementRef) {}
 
   ngOnInit() {
     window.ipcRenderer.on('success', (ev, args) => {
@@ -32,7 +37,7 @@ export class AppComponent implements OnInit {
       return;
     }
     const { name, path, size, type } = file as any;
-    window.ipcRenderer.send('file', { name, path, size, type });
+    window.ipcRenderer.send('file', { name, path, size, type, dest: this.destdir });
     this.isProcessing = true;
   }
 
@@ -46,4 +51,14 @@ export class AppComponent implements OnInit {
     this.isDraggedOver = false;
   }
 
+  startDirectorySelect() {
+    this.ref.nativeElement.querySelector('input[type=file]').click();
+  }
+
+  onDirectoryChange(ev) {
+    if (ev.target.files.length === 0) {
+      return;
+    }
+    this.destdir = ev.target.files[0].path;
+  }
 }
