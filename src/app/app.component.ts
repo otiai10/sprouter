@@ -31,15 +31,17 @@ export class AppComponent implements OnInit {
   onDrop(ev: DragEvent) {
     ev.stopPropagation();
     ev.preventDefault();
-    const file = ev.dataTransfer.files[0];
-    if (!file) {
-      return;
-    }
-    this.startProcessing();
-    setTimeout(() => {
-      const { name, path, size, type } = file as any;
-      window.ipcRenderer.send('file', { name, path, size, type, dest: this.destdir });
-    });
+    console.log(ev.dataTransfer);
+    // const file = ev.dataTransfer.files[0];
+    console.log(ev.dataTransfer.files);
+    // if (!file) {
+    //   return;
+    // }
+    // this.startProcessing();
+    // setTimeout(() => {
+    //   const { name, path, size, type } = file as any;
+    //   window.ipcRenderer.send('file', { name, path, size, type, dest: this.destdir });
+    // });
   }
 
   onDragOver(ev) {

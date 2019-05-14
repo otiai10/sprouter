@@ -2,80 +2,21 @@
 $gray-color: gray;
 $primary-color: tomato;
 
-.container {
-  width: 80%;
-  height: 100%;
-  margin:  0 auto;
-  padding: 12px 0;
-  box-sizing: border-box;
+div.container {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  &>* {
-    width: 100%;
-  }
-  #drop-area {
+  div.body {
     flex: 1;
-    border: dashed 8px $gray-color;
-    border-radius: 4px;
-    margin: 0 auto;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    &>div {
-      text-align: center;
-      span {
-        color: $gray-color;
-        font-size: 2em;
-        font-weight: bold;
-      }
-      p {
-        white-space: pre-line;
-        font-size: 0.8em;
-        padding: 18px;
-        max-height: 120px;
-        overflow: scroll;
-        &.error {
-          color: lightcoral;
-          text-align: left;
-        }
-        &.success {
-          color: lightseagreen;
-        }
-      }
-    }
   }
-  #configuration {
-    &>div {
-      margin: 12px 0;
-    }
-    button {
-      width: 120px; // TODO: Use flex
-      border: none;
-      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-      font-size: 1.2em;
-      background-color: $primary-color;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 2px;
-      cursor: pointer;
-      &:focus {
-        outline: none;
-      }
-    }
-    #config-directory {
-      input[type=file] {
-        display: none;
-      }
-      span {
-        padding: 12px;
-      }
-    }
-    #config-conversion {
-      input[type=text] {
-        padding: 2px 12px;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size: 1.2em;
-      }
+  div.foot {
+    max-height: 240px;
+    background-color: #232323;
+    color: rgba(202,202,202, 1);
+    display: flex;
+    * {
+      transition: all 0.2s;
     }
   }
 }

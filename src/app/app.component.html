@@ -1,27 +1,12 @@
 <div class="container">
-  <div
-    id="drop-area"
-    (drop)="onDrop($event)"
-    (dragover)="onDragOver($event)"
-    (dragleave)="onDragLeave($event)"
-  >
-    <div>
-      <span *ngIf="isProcessing">processing...</span>
-      <span *ngIf="!isProcessing">drop a file here</span>
-      <p *ngIf="result" [ngClass]="['result', result.type || '']">
-        {{result.message}}
-      </p>
-    </div>
+  <div class="head">
+    <!-- NOTHING HERE YET -->
   </div>
-  <div id="configuration">
-    <div id="config-conversion">
-      <button id="conversion">Convert</button>
-      <input type="text" value=".wav" readonly /> → <input type="text" value=".mp3" readonly />
-    </div>
-    <div id="config-directory">
-      <button id="directory-finder-btn" (click)="startDirectorySelect()" >Folder</button>
-      <input type="file" webkitdirectory (change)="onDirectoryChange($event)" />
-      <span>{{destdir}}</span>
-    </div>
+  <div class="body">
+    <app-form></app-form>
+    <app-entries></app-entries>
+  </div>
+  <div class="foot">
+    <app-inspect></app-inspect>
   </div>
 </div>

@@ -1,0 +1,13 @@
+<div>
+  <table *ngIf="job">
+    <thead>
+      <tr>
+        <th>Name</th><th>Status</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let entry of job.entries">
+      <td>{{entry.name}}</td>
+      <td>{{entry.status}}</td>
+    </tr>
+  </table>
+</div>
