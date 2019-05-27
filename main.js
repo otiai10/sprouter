@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const lookpath = require('lookpath');
+const { lookpath } = require('lookpath');
 const { spawn } = require('child_process');
 const path = require('path');
 

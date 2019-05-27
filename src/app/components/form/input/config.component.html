@@ -1,0 +1,11 @@
+<div class="container">
+  <div id="config-directory">
+    <button id="directory-finder-btn" (click)="startDirectorySelect()">Folder</button>
+    <input type="file" webkitdirectory (change)="onDirectoryChange($event)" />
+    <span>{{outdir}}</span>
+  </div>
+  <div id="config-conversion">
+    <button id="conversion">Convert</button>
+    <input type="text" value=".wav" readonly /> → <input type="text" value=".mp3" readonly />
+  </div>
+</div>

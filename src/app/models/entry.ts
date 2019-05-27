@@ -5,6 +5,10 @@ export enum Status {
   ERROR = 'error',
 }
 
+declare interface ElectronFile extends File {
+  path: string;
+}
+
 export default class Entry {
   constructor(
     public index: number,
@@ -13,4 +17,10 @@ export default class Entry {
     public size: number,
     public status: Status = Status.READY,
   ) {}
+}
+
+export function CreateEntriesFromDroppedFiles(files: FileList) {
+    return Array.from(files).map<Entry>((file: ElectronFile, index: number) => {
+      return new Entry(index, file.path, file.name, file.size);
+    });
 }
