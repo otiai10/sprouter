@@ -1,3 +1,7 @@
+$color-redy: #888583;
+$color-done: #5bd46d;
+$color-processing: #fcaa0e;
+$color-error: #fb2f29;
 :host {
   flex: 1;
   table {
@@ -6,6 +10,20 @@
         td:first-child {
             width: 40px;
             text-align: right;
+        }
+        td:nth-child(2) {
+          &.status-ready {
+            color: $color-redy;
+          }
+          &.status-processing {
+            color: $color-processing;
+          }
+          &.status-done {
+            color: $color-done;
+          }
+          &.status-error {
+            color: $color-error;
+          }
         }
       }
     }

@@ -3,9 +3,9 @@
     <thead>
       <tr>
         <th>No.</th>
+        <th>Status</th>
         <th>Name</th>
         <th>BPM</th>
-        <th>Status</th>
       </tr>
     </thead>
     <tbody *ngIf="!job">
@@ -19,9 +19,14 @@
     <tbody *ngIf="job">
       <tr *ngFor="let entry of job.entries; let i = index">
         <td>{{i + 1}}</td>
+        <td class="{{'status-' + entry.status}}">
+          <span *ngIf="entry.status == 'ready'">Ready</span>
+          <span *ngIf="entry.status == 'processing'"><img src="./assets/spinner.gif" style="height: 20px;"></span>
+          <span *ngIf="entry.status == 'done'">✔</span>
+          <span *ngIf="entry.status == 'error'">ERROR ⚠</span>
+        </td>
         <td>{{entry.name}}</td>
         <td>120</td>
-        <td>{{entry.status}}</td>
       </tr>
     </tbody>
   </table>

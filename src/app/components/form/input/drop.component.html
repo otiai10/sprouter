@@ -1,6 +1,14 @@
 <div
+  *ngIf="service.job.finished"
   class="container"
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
   (dragleave)="onDragLeave($event)"
 ></div>
+<div
+  *ngIf="!service.job.finished"
+  class="processing"
+>
+  <img src="./assets/pacman.gif" style="width:100px;" />
+  <span>{{service.job.progress}} / {{service.job.length}}</span>
+</div>

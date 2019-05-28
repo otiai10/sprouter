@@ -18,7 +18,7 @@ import { ConfigComponent } from './components/form/input/config.component';
     InspectComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
