@@ -6,8 +6,9 @@ const path = require('path');
 async function processJob(ev, job, win) {
   const stdlog = (payload) => win.webContents.send('stdio-log', payload);
   for (let i = 0; i < job.entries.length; i++) {
-    const result = await processEntry(job.entries[i], job.outdir, stdlog);
-    job.entries[result.index] = {...result};
+    job.entries[i].status = 'processing';
+    win.webContents.send('job-update', job);
+    job.entries[i] = await processEntry(job.entries[i], job.outdir, stdlog);
     win.webContents.send('job-update', job);
   }
 };
@@ -20,18 +21,15 @@ async function processEntry(entry, outdir, stdlog) {
     const cmd = spawn(ffmpeg, ['-y', '-i', entry.path, destpath], { stdio: ['ignore', 'pipe', 'pipe'] });
     cmd.stdout.on('data', (chunk) => stdlog({type: 'stdout', data: chunk.toString()}));
     cmd.stderr.on('data', (chunk) => stdlog({type: 'stderr', data: chunk.toString()}));
-    cmd.on('close', (code) => {
-      entry.status = code == 0 ? 'done' : 'error';
-      resolve(entry);
-    });
+    cmd.on('close', (code) => resolve({ ...entry, status: code == 0 ? 'done' : 'error' }));
   });
 }
 
 const __main__ = () => {
   const win = new BrowserWindow({
-    width: 780,  minWidth: 780,
-    height: 480, minHeight: 400,
-    x: 40, y: 40,
+    width: 1080,  minWidth: 900,
+    height: 920, minHeight: 480,
+    x: 20, y: 20,
   });
   win.loadURL(`file://${__dirname}/dist/index.html`)
   ipcMain.on('job-start', (ev, args) => processJob(ev, args, win));

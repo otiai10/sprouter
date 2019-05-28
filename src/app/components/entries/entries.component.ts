@@ -8,6 +8,7 @@ import Job from 'src/app/models/job';
   styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent {
+  private placeholder: any[] = Array(200).fill({});
   private job: Job;
   constructor(private service: JobService, private zone: NgZone) {
     this.service.updated.subscribe(job => {

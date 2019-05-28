@@ -1,24 +1,28 @@
-// @import "~photonkit/dist/css/photon.min.css";
-// @import "~photonkit/dist/css/photon.css";
 
-// $gray-color: gray;
-// $primary-color: tomato;
+$app-bg: #fefefe;
 
-// div.container {
-//   height: 100vh;
-//   display: flex;
-//   flex-direction: column;
-//   div.body {
-//     flex: 1;
-//     display: flex;
-//   }
-//   div.foot {
-//     max-height: 240px;
-//     background-color: #232323;
-//     color: rgba(202,202,202, 1);
-//     display: flex;
-//     * {
-//       transition: all 0.2s;
-//     }
-//   }
-// }
+:host {
+  background-color: $app-bg;
+  height: 100%;
+  width: 100%;
+  >div.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    >div:first-child {
+      flex: 1;
+      // overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      >*:first-child {
+        flex: 1;
+      }
+      >*:nth-child(2) {
+        flex: 2;
+      }
+    }
+    >div:nth-child(2) {
+      flex: 2;
+    }
+  }
+}

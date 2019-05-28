@@ -8,6 +8,7 @@ import { Component, ElementRef, Input } from '@angular/core';
 export class ConfigComponent {
 
   @Input() onDirectoryChange: (ev: Event) => void;
+  @Input() outdir: string;
   constructor(private ref: ElementRef) {}
 
   startDirectorySelect() {

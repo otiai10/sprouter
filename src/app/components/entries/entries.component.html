@@ -1,13 +1,28 @@
 <div>
-  <table *ngIf="job" class="table-striped">
+  <table class="table-striped">
     <thead>
       <tr>
-        <th>Name</th><th>Status</th>
+        <th>No.</th>
+        <th>Name</th>
+        <th>BPM</th>
+        <th>Status</th>
       </tr>
     </thead>
-    <tr *ngFor="let entry of job.entries">
-      <td>{{entry.name}}</td>
-      <td>{{entry.status}}</td>
-    </tr>
+    <tbody *ngIf="!job">
+      <tr *ngFor="let entry of placeholder; let i = index">
+        <td>{{i + 1}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="job">
+      <tr *ngFor="let entry of job.entries; let i = index">
+        <td>{{i + 1}}</td>
+        <td>{{entry.name}}</td>
+        <td>120</td>
+        <td>{{entry.status}}</td>
+      </tr>
+    </tbody>
   </table>
 </div>

@@ -1,8 +1,8 @@
-
 :host {
-  >div {
-    background: red;
-    width: 100px;
-    height: 100px;
+  .container {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: dotted 8px lightgray;
   }
 }
