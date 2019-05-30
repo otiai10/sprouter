@@ -3,7 +3,11 @@ import Entry, { Status } from './entry';
 export default class Job {
   public static decode(jsonlike: any): Job {
     return new Job(
-      jsonlike.entries.map(e => new Entry(e.index, e.path, e.name, e.size, e.status)),
+      jsonlike.entries.map(e => {
+        const entry = new Entry(e.index, e.path, e.name, e.size, e.status);
+        if (e.bpm) { entry.bpm = e.bpm; }
+        return entry;
+      }),
       jsonlike.outdir,
     );
   }

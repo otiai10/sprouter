@@ -10,6 +10,7 @@ declare interface ElectronFile extends File {
 }
 
 export default class Entry {
+  public bpm?: number;
   constructor(
     public index: number,
     public path: string,

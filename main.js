@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { lookpath } = require('lookpath');
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 async function processJob(ev, job, win) {
   const stdlog = (payload) => win.webContents.send('stdio-log', payload);
@@ -17,7 +18,9 @@ async function processEntry(entry, outdir, stdlog) {
   const destext = '.mp3'; // FIXME:
   const destpath = path.join(outdir, path.basename(entry.path).replace(path.extname(entry.path), destext));
   const converted = await convertFormat(entry, destpath, stdlog);
-  return converted;
+  const detected = await detectBPM(converted, destpath, stdlog);
+  await prependBPMToFileName(detected, destpath);
+  return detected;
 }
 
 async function convertFormat(entry, destpath, stdlog) {
@@ -35,13 +38,24 @@ async function convertFormat(entry, destpath, stdlog) {
 }
 
 async function detectBPM(entry, destpath, stdlog) {
-  const ffmpeg = await lookpath('ffmpeg');
+  const sox = await lookpath('sox');
+  const bpm = await lookpath('bpm');
   return new Promise(resolve => {
-    const cmd = spawn(ffmpeg, ['-y', '-i', entry.path, destpath], { stdio: ['ignore', 'pipe', 'pipe'] });
-    cmd.stdout.on('data', (chunk) => stdlog({type: 'stdout', data: chunk.toString()}));
-    cmd.stderr.on('data', (chunk) => stdlog({type: 'stderr', data: chunk.toString()}));
-    cmd.on('close', (code) => resolve({ ...entry, status: code == 0 ? 'done' : 'error' }));
+    const cmdSOX = spawn(sox, [destpath, '-t', 'raw', '-r', '44100', '-e', 'float', '-c', '1', '-']);
+    const cmdBPM = spawn(bpm);
+    cmdSOX.stdout.pipe(cmdBPM.stdin);
+    cmdBPM.stdout.on('data', (chunk) => {
+      entry.bpm = parseInt(chunk.toString());
+      stdlog({type: 'stdout', data: chunk.toString()});
+    });
+    cmdBPM.stderr.on('data', (chunk) => stdlog({type: 'stderr', data: chunk.toString()}));
+    cmdBPM.on('close', (code) => resolve({ ...entry, status: code == 0 ? 'done' : 'error' }));
   });
+}
+
+async function prependBPMToFileName(entry, destpath) {
+  const newpath = path.join(path.dirname(destpath), `${entry.bpm}_${path.basename(destpath)}`);
+  return new Promise(resolve => fs.rename(destpath, newpath, (err) => resolve(entry)));
 }
 
 const __main__ = () => {
